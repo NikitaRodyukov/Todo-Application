@@ -1,27 +1,13 @@
 import { Component } from 'react'
 import './task.css'
 
-export default class Task extends Component{  
-    state = {
-      completed: false
-    }
-
-    onToogleClick = () => {
-      this.setState(({ completed }) => {
-        return {
-          completed: !completed
-        }
-      })
-    }
-    
+export default class Task extends Component{     
     render () {
-      const { description, created, onDeleted } = this.props
-      const {completed} = this.state
-      let classNames = 'view'
+      const { description, created, onDeleted, onToogleCompleted, completed } = this.props
+      let classNames = ''
 
       if(completed){
-        classNames= ' completed'
-        
+        classNames= ' completed'        
       }
 
       return (
@@ -30,7 +16,8 @@ export default class Task extends Component{
             <input 
             className="toggle" 
             type="checkbox"
-            onClick={ this.onToogleClick} 
+            onClick={ onToogleCompleted } 
+            defaultChecked={ completed ? true : false }
             />
             <label>
               <span className="description">{ description }</span>
