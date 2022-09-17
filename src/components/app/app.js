@@ -11,10 +11,9 @@ export default class App extends Component {
 
   state = {
     todoData: [
-      this.createTodoItem('Отчислиться'),
-      this.createTodoItem('Устроиться на работу'),
-      this.createTodoItem('Уволиться'),
-      this.createTodoItem('Вернуться в уник'),
+      this.createTodoItem('First Task'),
+      this.createTodoItem('Second Task'),
+      this.createTodoItem('Third Task'),
     ],
     filter: 'all',
   }
@@ -116,8 +115,8 @@ export default class App extends Component {
     return (
       <div>
         <header className="header">
-          <h1>План по захвату мира:</h1>
-          <NewTaskForm class="new-todo" onNewTaskAdd={this.newTask} />
+          <h1>todos</h1>
+          <NewTaskForm clazz="new-todo" onNewTaskAdd={this.newTask} />
         </header>
         <section className="main">
           <TaskList

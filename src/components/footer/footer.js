@@ -7,10 +7,10 @@ import './footer.css'
 function Footer({ activeTasksCount, completedTasks, clearCompteled, ...filterProps }) {
   return (
     <footer className="footer">
-      <span className="todo-count">{`${activeTasksCount} осталось сделать`}</span>
+      <span className="todo-count">{`${activeTasksCount} left to do`}</span>
       <TasksFilter {...filterProps} />
       <button type="button" className="clear-completed" onClick={() => clearCompteled(completedTasks)}>
-        Удалить выполненные
+        Delete completed
       </button>
     </footer>
   )

@@ -3,7 +3,7 @@
 import PropTypes from 'prop-types'
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 
-import EditTaskForm from '../edit-task-form/edit-task-form'
+import NewTaskForm from '../new-task-form/new-task-form'
 import './task.css'
 
 function Task({
@@ -34,16 +34,16 @@ function Task({
 
   return (
     <li className={classNames}>
-      <div className="view">
+      <div className="view">        
+        <input className="toggle" type="checkbox" onClick={onToogleCompleted} defaultChecked={completed} />
         <label>
-          <input className="toggle" type="checkbox" onClick={onToogleCompleted} defaultChecked={completed} />
           <span className="description">{description}</span>
+          <span className="created">{createdFrom}</span>
         </label>
-        <span className="created">{createdFrom}</span>
         <button type="button" className="icon icon-edit" onClick={onToogleEditing} />
         <button type="button" className="icon icon-destroy" onClick={onDeleted} />
       </div>
-      {editing ? <EditTaskForm editTaskDesc={editTaskDesc} description={description} id={id} /> : null}
+      {editing ? <NewTaskForm clazz="edit" editTaskDesc={editTaskDesc} description={description} id={id} /> : null}
     </li>
   )
 }

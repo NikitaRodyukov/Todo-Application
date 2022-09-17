@@ -28,9 +28,17 @@ export default TaskList
 
 TaskList.defaultProps = {
   todos: [],
+  onDeleted: () => {},
+  onToogleCompleted: () => {},
+  onToogleEditing: () => {},
+  editTaskDesc: () => {},
 }
 
 TaskList.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   todos: PropTypes.arrayOf(PropTypes.object),
+  onDeleted: PropTypes.func,
+  onToogleCompleted: PropTypes.func,
+  onToogleEditing: PropTypes.func,
+  editTaskDesc: PropTypes.func,
 }
