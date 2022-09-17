@@ -1,35 +1,34 @@
-import { Component } from "react";
-import "./edit-task-form";
+import { Component } from 'react'
+import './edit-task-form.css'
 
 export default class EditTaskForm extends Component {
   state = {
-    label: this.props.label,
-  };
+    label: '',
+  }
 
   onLabelChange = (e) => {
     this.setState({
       label: e.target.value,
-    });
-  };
+    })
+  }
 
   onSubmit = (e) => {
-    e.preventDefault();
-    this.props.editTaskDesc(this.props.id, this.state.label);
+    const { id, label, editTaskDesc } = this.props
+    e.preventDefault()
+    editTaskDesc(id, label)
     this.setState({
-      label: "",
-    });
-  };
+      label: '',
+    })
+  }
 
   render() {
+    const { description } = this.props
+    const { label } = this.state
+
     return (
       <form action="" onSubmit={this.onSubmit}>
-        <input
-          className="edit"
-          onChange={this.onLabelChange}
-          defaultValue={this.props.description}
-          autoFocus
-        />
+        <input className="edit" onChange={this.onLabelChange} defaultValue={description} placeholder={label} />
       </form>
-    );
+    )
   }
 }

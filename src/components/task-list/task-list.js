@@ -1,42 +1,36 @@
-import { Component } from "react";
-import Task from "../task/task";
-import PropTypes from "prop-types";
-import "./task-list.css";
+import PropTypes from 'prop-types'
 
-export default class TaskList extends Component {
-  static defaultProps = {
-    todos: [],
-  };
+import Task from '../task/task'
+import './task-list.css'
 
-  PropTypes = {
-    todos: PropTypes.arrayOf(PropTypes.object),
-  };
+function TaskList({ todos, onDeleted, onToogleCompleted, onToogleEditing, editTaskDesc }) {
+  const elements = todos.map((item) => {
+    const { id, ...itemProps } = item
 
-  render() {
-    const {
-      todos,
-      onDeleted,
-      onToogleCompleted,
-      onToogleEditing,
-      editTaskDesc,
-    } = this.props;
+    return (
+      <Task
+        key={id}
+        id={id}
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        {...itemProps}
+        onDeleted={() => onDeleted(id)}
+        onToogleCompleted={() => onToogleCompleted(id)}
+        onToogleEditing={() => onToogleEditing(id)}
+        editTaskDesc={editTaskDesc}
+      />
+    )
+  })
 
-    const elements = todos.map((item) => {
-      const { id, ...itemProps } = item;
+  return <ul className="todo-list">{elements}</ul>
+}
 
-      return (
-        <Task
-          key={id}
-          id={id}
-          {...itemProps}
-          onDeleted={() => onDeleted(id)}
-          onToogleCompleted={() => onToogleCompleted(id)}
-          onToogleEditing={() => onToogleEditing(id)}
-          editTaskDesc={editTaskDesc}
-        />
-      );
-    });
+export default TaskList
 
-    return <ul className="todo-list">{elements}</ul>;
-  }
+TaskList.defaultProps = {
+  todos: [],
+}
+
+TaskList.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  todos: PropTypes.arrayOf(PropTypes.object),
 }
