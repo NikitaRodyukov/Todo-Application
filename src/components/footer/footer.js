@@ -2,7 +2,6 @@
 import PropTypes from 'prop-types'
 
 import TasksFilter from '../tasks-filter/tasks-filter'
-import './footer.css'
 
 function Footer({ activeTasksCount, completedTasks, clearCompteled, ...filterProps }) {
   return (
