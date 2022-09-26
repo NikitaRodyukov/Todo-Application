@@ -1,12 +1,10 @@
 import PropTypes from 'prop-types'
 
 import Task from '../task/task'
-import './task-list.css'
 
 function TaskList({ todos, onDeleted, onToogleCompleted, onToogleEditing, editTaskDesc }) {
   const elements = todos.map((item) => {
     const { id, ...itemProps } = item
-
     return (
       <Task
         key={id}

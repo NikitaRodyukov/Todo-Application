@@ -1,10 +1,9 @@
+/* eslint-disable indent */
 import { Component } from 'react'
 
 import NewTaskForm from '../new-task-form/new-task-form'
 import TaskList from '../task-list/task-list'
 import Footer from '../footer/footer'
-
-import './app.css'
 
 export default class App extends Component {
   maxId = 100
@@ -33,7 +32,8 @@ export default class App extends Component {
   editTaskDesc = (id, text) => {
     this.setState(({ todoData }) => {
       const idx = todoData.findIndex((el) => id === el.id)
-      const newItem = this.createTodoItem(text)
+      const { min, sec } = todoData[idx]
+      const newItem = this.createTodoItem(text, min, sec)
 
       return {
         todoData: [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)],
@@ -41,10 +41,17 @@ export default class App extends Component {
     })
   }
 
-  newTask = (text) => {
-    this.setState(({ todoData }) => {
-      const newItem = this.createTodoItem(text)
+  newTask = (text, min, sec) => {
+    let newSec = !(sec === '') ? parseInt(sec, 10) : 0
+    let newMin = !(min === '') ? parseInt(min, 10) : 0
 
+    if (newSec >= 60) {
+      newMin = min + Math.floor(newSec / 60)
+      newSec -= Math.floor(newSec / 60) * 60
+    }
+
+    this.setState(({ todoData }) => {
+      const newItem = this.createTodoItem(text, newMin, newSec)
       return {
         todoData: [...todoData, newItem],
       }
@@ -73,14 +80,14 @@ export default class App extends Component {
 
   filter = (items, filter) => {
     switch (filter) {
-    case 'all':
-      return items
-    case 'active':
-      return items.filter((item) => !item.completed)
-    case 'completed':
-      return items.filter((item) => item.completed)
-    default:
-      return items
+      case 'all':
+        return items
+      case 'active':
+        return items.filter((item) => !item.completed)
+      case 'completed':
+        return items.filter((item) => item.completed)
+      default:
+        return items
     }
   }
 
@@ -96,13 +103,16 @@ export default class App extends Component {
     return [...arr.slice(0, idx), newItem, ...arr.slice(idx + 1)]
   }
 
-  createTodoItem(description) {
+  createTodoItem(description, min = 0, sec = 0) {
     return {
       description,
       completed: false,
       editing: false,
       created: Date.now(),
       id: this.maxId++,
+      isTimerActive: false,
+      min,
+      sec,
     }
   }
 
@@ -113,7 +123,7 @@ export default class App extends Component {
     const visibleItems = this.filter(todoData, filter)
 
     return (
-      <div>
+      <>
         <header className="header">
           <h1>todos</h1>
           <NewTaskForm clazz="new-todo" onNewTaskAdd={this.newTask} />
@@ -134,7 +144,7 @@ export default class App extends Component {
             clearCompteled={this.clearCompteled}
           />
         </section>
-      </div>
+      </>
     )
   }
 }
