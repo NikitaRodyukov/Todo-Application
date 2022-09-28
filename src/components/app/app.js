@@ -10,9 +10,9 @@ export default class App extends Component {
 
   state = {
     todoData: [
-      this.createTodoItem('First Task'),
-      this.createTodoItem('Second Task'),
-      this.createTodoItem('Third Task'),
+      this.createTodoItem('First Task', 5),
+      this.createTodoItem('Second Task', 5),
+      this.createTodoItem('Third Task', 5),
     ],
     filter: 'all',
   }
