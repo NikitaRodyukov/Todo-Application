@@ -1,1 +1,1 @@
-Ссылка на развернутое приложение: https://todo-application-4y6qip44w-nikitarodyukov.vercel.app/
+Ссылка на развернутое приложение: https://todo-application-q6r18buq5-nikitarodyukov.vercel.app/
