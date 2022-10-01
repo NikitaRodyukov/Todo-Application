@@ -18,6 +18,10 @@ export default class Task extends Component {
     const { sec, min } = this.state
 
     if (sec !== nextProps.sec || min !== nextProps.min) {
+      this.setState({
+        sec: nextProps.sec,
+        min: nextProps.min,
+      })
       return true
     }
 
