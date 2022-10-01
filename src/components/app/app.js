@@ -1,4 +1,4 @@
-/* eslint-disable indent */
+/* eslint-disable consistent-return */
 import { Component } from 'react'
 
 import NewTaskForm from '../new-task-form/new-task-form'
@@ -10,9 +10,9 @@ export default class App extends Component {
 
   state = {
     todoData: [
-      this.createTodoItem('First Task', 5),
-      this.createTodoItem('Second Task', 5),
-      this.createTodoItem('Third Task', 5),
+      this.createTodoItem('First Task'),
+      this.createTodoItem('Second Task'),
+      this.createTodoItem('Third Task'),
     ],
     filter: 'all',
   }
@@ -20,6 +20,7 @@ export default class App extends Component {
   deleteItem = (id) => {
     this.setState(({ todoData }) => {
       const idx = todoData.findIndex((el) => id === el.id)
+      clearInterval(todoData[idx].interval)
 
       const newArray = [...todoData.slice(0, idx), ...todoData.slice(idx + 1)]
 
@@ -32,11 +33,10 @@ export default class App extends Component {
   editTaskDesc = (id, text) => {
     this.setState(({ todoData }) => {
       const idx = todoData.findIndex((el) => id === el.id)
-      const { min, sec } = todoData[idx]
-      const newItem = this.createTodoItem(text, min, sec)
+      const updatedItem = { ...todoData[idx], description: text, editing: false }
 
       return {
-        todoData: [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)],
+        todoData: [...todoData.slice(0, idx), updatedItem, ...todoData.slice(idx + 1)],
       }
     })
   }
@@ -62,6 +62,7 @@ export default class App extends Component {
     this.setState(({ todoData }) => ({
       todoData: this.toggleProperty(todoData, id, 'completed'),
     }))
+    this.onPause(id)
   }
 
   onToogleEditing = (id) => {
@@ -91,6 +92,85 @@ export default class App extends Component {
     }
   }
 
+  onPlay = (id) => {
+    this.setState(({ todoData }) => {
+      const idx = todoData.findIndex((el) => id === el.id)
+      const { isTimerActive, sec, min, completed } = todoData[idx]
+
+      if (isTimerActive || completed) return { todoData }
+
+      let { interval } = this.state
+
+      if (!sec && !min) {
+        const updatedItem = {
+          ...todoData[idx],
+          interval: clearInterval(interval),
+        }
+
+        return {
+          todoData: [...todoData.slice(0, idx), updatedItem, ...todoData.slice(idx + 1)],
+        }
+      }
+
+      interval = setInterval(() => this.timeRender(id), 1000)
+      const updatedItem = {
+        ...todoData[idx],
+        isTimerActive: true,
+        interval,
+      }
+
+      return {
+        todoData: [...todoData.slice(0, idx), updatedItem, ...todoData.slice(idx + 1)],
+      }
+    })
+  }
+
+  onPause = (id) => {
+    this.setState(({ todoData }) => {
+      const idx = todoData.findIndex((el) => id === el.id)
+      const { isTimerActive, interval } = todoData[idx]
+      if (!isTimerActive) return { todoData }
+
+      const updatedItem = {
+        ...todoData[idx],
+        isTimerActive: false,
+        interval: clearInterval(interval),
+      }
+
+      return {
+        todoData: [...todoData.slice(0, idx), updatedItem, ...todoData.slice(idx + 1)],
+      }
+    })
+  }
+
+  timeRender = (id) => {
+    this.setState(({ todoData }) => {
+      const idx = todoData.findIndex((el) => id === el.id)
+
+      const { sec, min } = todoData[idx]
+
+      if (!sec && !min) {
+        this.onPause(id)
+        return { todoData }
+      }
+
+      let updatedItem = {
+        ...todoData[idx],
+        sec: sec - 1,
+      }
+
+      if (!sec) {
+        updatedItem = {
+          ...todoData[idx],
+          sec: sec + 59,
+          min: min - 1,
+        }
+      }
+
+      return { todoData: [...todoData.slice(0, idx), updatedItem, ...todoData.slice(idx + 1)] }
+    })
+  }
+
   toggleProperty(arr, id, propName) {
     const idx = arr.findIndex((el) => id === el.id)
 
@@ -103,16 +183,17 @@ export default class App extends Component {
     return [...arr.slice(0, idx), newItem, ...arr.slice(idx + 1)]
   }
 
-  createTodoItem(description, min = 0, sec = 0) {
+  createTodoItem(description, min = 5, sec = 0) {
     return {
       description,
       completed: false,
       editing: false,
       created: Date.now(),
       id: this.maxId++,
-      isTimerActive: false,
       min,
       sec,
+      isTimerActive: false,
+      interval: undefined,
     }
   }
 
@@ -121,7 +202,6 @@ export default class App extends Component {
     const completedTasks = todoData.filter((el) => (el.completed ? el : false))
     const activeTasksCount = todoData.length - completedTasks.length
     const visibleItems = this.filter(todoData, filter)
-
     return (
       <>
         <header className="header">
@@ -135,6 +215,9 @@ export default class App extends Component {
             onToogleCompleted={this.onToogleCompleted}
             onToogleEditing={this.onToogleEditing}
             editTaskDesc={this.editTaskDesc}
+            onPlay={this.onPlay}
+            onPause={this.onPause}
+            timeRender={this.timeRender}
           />
           <Footer
             filter={filter}
