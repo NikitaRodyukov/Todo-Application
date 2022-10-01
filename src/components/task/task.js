@@ -1,6 +1,7 @@
 /* eslint-disable react/destructuring-assignment */
-/* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/control-has-associated-label */
+/* eslint-disable jsx-a11y/label-has-associated-control */
+
 import PropTypes from 'prop-types'
 import { Component } from 'react'
 import formatDistanceToNowStrict from 'date-fns/formatDistanceToNowStrict'
@@ -9,69 +10,18 @@ import NewTaskForm from '../new-task-form/new-task-form'
 
 export default class Task extends Component {
   state = {
-    min: this.props.min,
     sec: this.props.sec,
-    isTimerActive: this.props.isTimerActive,
-    interval: undefined,
+    min: this.props.min,
   }
 
-  componentWillUnmount() {
-    const { interval } = this.state
-
-    this.setState({
-      interval: clearInterval(interval),
-    })
-  }
-
-  onPlay = () => {
-    if (this.state.isTimerActive) return
-    this.setState({ isTimerActive: true })
-
-    const { sec, min } = this.state
-    let { interval } = this.state
-
-    if (!sec && !min) {
-      this.setState({
-        interval: clearInterval(interval),
-      })
-    }
-
-    interval = setInterval(this.timeRender, 1000)
-    this.setState({
-      interval,
-    })
-  }
-
-  onPause = () => {
-    const { isTimerActive, interval } = this.state
-
-    if (!isTimerActive) return
-    this.setState({ isTimerActive: false })
-
-    this.setState({
-      interval: clearInterval(interval),
-    })
-  }
-
-  timeRender = () => {
+  shouldComponentUpdate(nextProps) {
     const { sec, min } = this.state
 
-    if (!sec && !min) {
-      this.onPause()
-      return
+    if (sec !== nextProps.sec || min !== nextProps.min) {
+      return true
     }
 
-    this.setState(() => {
-      let newSec = sec - 1
-
-      if (!sec) {
-        const newMin = min - 1
-        newSec += 60
-        return { sec: newSec, min: newMin }
-      }
-
-      return { sec: newSec, min }
-    })
+    return false
   }
 
   formatTime = (time) => time.toString().padStart(2, '0')
@@ -87,9 +37,12 @@ export default class Task extends Component {
       editing,
       id,
       description,
+      onPlay,
+      onPause,
+      sec,
+      min,
     } = this.props
 
-    const { min, sec } = this.state
     const createdFrom = formatDistanceToNowStrict(created, {
       includeSeconds: true,
     })
@@ -98,7 +51,11 @@ export default class Task extends Component {
     let classNames = ''
 
     if (editing) {
-      classNames = ' editing'
+      classNames = 'editing'
+    }
+
+    if (completed) {
+      classNames = 'completed'
     }
 
     return (
@@ -108,8 +65,8 @@ export default class Task extends Component {
           <label>
             <span className="title">{description}</span>
             <span className="description">
-              <button type="button" className="icon icon-play" onClick={this.onPlay} />
-              <button type="button" className="icon icon-pause" onClick={this.onPause} />
+              <button type="button" className="icon icon-play" onClick={onPlay} />
+              <button type="button" className="icon icon-pause" onClick={onPause} />
               {currentTime}
             </span>
             <span className="description">{createdFrom}</span>

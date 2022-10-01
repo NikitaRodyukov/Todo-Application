@@ -21,7 +21,11 @@
     },
     "plugins": ["react", "eslint-plugin-prettier", "import"],
     "rules": {
-      "indent": ["error", 2],
+      "indent": ["error", 2,
+                  {
+                    "SwitchCase": 1,
+                    "ignoredNodes": ["ConditionalExpression"]
+                  }],
       "linebreak-style": [0, "unix"],
       "quotes": ["error", "single"],
       "semi": ["error", "never"],
