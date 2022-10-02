@@ -202,6 +202,7 @@ export default class App extends Component {
     const completedTasks = todoData.filter((el) => (el.completed ? el : false))
     const activeTasksCount = todoData.length - completedTasks.length
     const visibleItems = this.filter(todoData, filter)
+    console.log(visibleItems)
     return (
       <>
         <header className="header">

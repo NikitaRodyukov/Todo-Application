@@ -16,6 +16,7 @@ export default class Task extends Component {
 
   shouldComponentUpdate(nextProps) {
     const { sec, min } = this.state
+    const { completed, editing, description } = this.props
 
     if (sec !== nextProps.sec || min !== nextProps.min) {
       this.setState({
@@ -25,6 +26,9 @@ export default class Task extends Component {
       return true
     }
 
+    if (completed !== nextProps.completed || editing !== nextProps.editing || description !== nextProps.editing) {
+      return true
+    }
     return false
   }
 
@@ -61,7 +65,7 @@ export default class Task extends Component {
     if (completed) {
       classNames = 'completed'
     }
-
+    console.log(classNames)
     return (
       <li className={classNames}>
         <div className="view">
