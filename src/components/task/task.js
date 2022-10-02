@@ -26,7 +26,7 @@ export default class Task extends Component {
       return true
     }
 
-    if (completed !== nextProps.completed || editing !== nextProps.editing || description !== nextProps.editing) {
+    if (completed !== nextProps.completed || editing !== nextProps.editing || description !== nextProps.description) {
       return true
     }
     return false
@@ -65,7 +65,7 @@ export default class Task extends Component {
     if (completed) {
       classNames = 'completed'
     }
-    console.log(classNames)
+    
     return (
       <li className={classNames}>
         <div className="view">
