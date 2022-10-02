@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 
 export default class NewTaskForm extends Component {
   state = {
-    label: this.props.description,
+    label: this.props.isEditing ? this.props.description : '',
     min: '',
     sec: '',
   }
