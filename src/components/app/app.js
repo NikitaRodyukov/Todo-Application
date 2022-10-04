@@ -5,7 +5,7 @@ import TaskList from '../task-list/task-list'
 import Footer from '../footer/footer'
 
 export default function App() {
-  const createTodoItem = (description, min = 5, sec = 0) => ({
+  const createTodoItem = (description, min = 3, sec = 0) => ({
     description,
     isCompleted: false,
     isEditing: false,
