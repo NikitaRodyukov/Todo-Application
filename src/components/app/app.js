@@ -1,4 +1,3 @@
-/* eslint-disable consistent-return */
 import { useState } from 'react'
 
 import NewTaskForm from '../new-task-form/new-task-form'
@@ -8,8 +7,8 @@ import Footer from '../footer/footer'
 export default function App() {
   const createTodoItem = (description, min = 5, sec = 0) => ({
     description,
-    completed: false,
-    editing: false,
+    isCompleted: false,
+    isEditing: false,
     created: Date.now(),
     id: Math.floor(Math.random() * 1000),
     min,
@@ -60,7 +59,7 @@ export default function App() {
   const editTaskDesc = (id, text) =>
     setTodoData((oldTodoData) => {
       const idx = oldTodoData.findIndex((el) => id === el.id)
-      const updatedItem = { ...oldTodoData[idx], description: text, editing: false }
+      const updatedItem = { ...oldTodoData[idx], description: text, isEditing: false }
 
       return [...oldTodoData.slice(0, idx), updatedItem, ...oldTodoData.slice(idx + 1)]
     })
@@ -81,12 +80,12 @@ export default function App() {
   }
 
   const onToogleCompleted = (id) => {
-    setTodoData((oldTodoData) => toggleProperty(oldTodoData, id, 'completed'))
+    setTodoData((oldTodoData) => toggleProperty(oldTodoData, id, 'isCompleted'))
     onPause(id)
   }
 
   const onToogleEditing = (id) => {
-    setTodoData((oldTodoData) => toggleProperty(oldTodoData, id, 'editing'))
+    setTodoData((oldTodoData) => toggleProperty(oldTodoData, id, 'isEditing'))
   }
 
   const onFilterChange = (newFilterValue) => {
@@ -102,9 +101,9 @@ export default function App() {
       case 'all':
         return items
       case 'active':
-        return items.filter((item) => !item.completed)
-      case 'completed':
-        return items.filter((item) => item.completed)
+        return items.filter((item) => !item.isCompleted)
+      case 'isCompleted':
+        return items.filter((item) => item.isCompleted)
       default:
         return items
     }
@@ -139,10 +138,10 @@ export default function App() {
   const onPlay = (id) =>
     setTodoData((oldTodoData) => {
       const idx = oldTodoData.findIndex((el) => id === el.id)
-      const { isTimerActive, sec, min, completed } = oldTodoData[idx]
+      const { isTimerActive, sec, min, isCompleted } = oldTodoData[idx]
       let { interval } = oldTodoData[idx]
 
-      if (isTimerActive || completed) return oldTodoData
+      if (isTimerActive || isCompleted) return oldTodoData
 
       if (!sec && !min) {
         const updatedItem = {
@@ -163,7 +162,7 @@ export default function App() {
       return [...oldTodoData.slice(0, idx), updatedItem, ...oldTodoData.slice(idx + 1)]
     })
 
-  const completedTasks = todoData.filter((el) => (el.completed ? el : false))
+  const completedTasks = todoData.filter((el) => (el.isCompleted ? el : false))
   const activeTasksCount = todoData.length - completedTasks.length
   const visibleItems = filterItems(todoData, filter)
 

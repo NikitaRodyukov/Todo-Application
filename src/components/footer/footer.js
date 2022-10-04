@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import PropTypes from 'prop-types'
 
 import TasksFilter from '../tasks-filter/tasks-filter'
@@ -7,7 +6,10 @@ export default function Footer({ activeTasksCount, completedTasks, clearComptele
   return (
     <footer className="footer">
       <span className="todo-count">{`${activeTasksCount} left to do`}</span>
-      <TasksFilter {...filterProps} />
+      <TasksFilter
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        {...filterProps}
+      />
       <button type="button" className="clear-completed" onClick={() => clearCompteled(completedTasks)}>
         Delete completed
       </button>

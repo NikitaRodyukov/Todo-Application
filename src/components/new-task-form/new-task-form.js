@@ -6,10 +6,12 @@ export default function NewTaskForm({ id, description, clazz, editTaskDesc, onNe
   const [label, setLabel] = useState(description)
   const [sec, setSec] = useState('')
   const [min, setMin] = useState('')
+  const isEditing = clazz === 'edit'
 
   const onSubmit = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault()
+
       if (clazz === 'edit') {
         editTaskDesc(id, label)
       } else {
@@ -21,8 +23,6 @@ export default function NewTaskForm({ id, description, clazz, editTaskDesc, onNe
       setSec('')
     }
   }
-
-  const isEditing = clazz === 'edit'
 
   return (
     <form onKeyDown={onSubmit} className="new-todo-form">

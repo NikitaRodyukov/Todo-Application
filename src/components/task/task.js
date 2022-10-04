@@ -12,10 +12,10 @@ export default function Task({
   onDeleted,
   onToogleCompleted,
   created,
-  completed,
+  isCompleted,
   onToogleEditing,
   editTaskDesc,
-  editing,
+  isEditing,
   id,
   description,
   onPlay,
@@ -30,20 +30,17 @@ export default function Task({
   })
 
   const currentTime = `${formatTime(min)}:${formatTime(sec)}`
+
   let classNames = ''
 
-  if (editing) {
-    classNames = 'editing'
-  }
+  classNames += isEditing ? 'editing' : ''
+  classNames += isCompleted ? 'completed' : ''
 
-  if (completed) {
-    classNames = 'completed'
-  }
   return useMemo(
     () => (
       <li className={classNames}>
         <div className="view">
-          <input className="toggle" type="checkbox" onClick={onToogleCompleted} defaultChecked={completed} />
+          <input className="toggle" type="checkbox" onClick={onToogleCompleted} defaultChecked={isCompleted} />
           <label>
             <span className="title">{description}</span>
             <span className="description">
@@ -56,20 +53,20 @@ export default function Task({
           <button type="button" className="icon icon-edit" onClick={onToogleEditing} />
           <button type="button" className="icon icon-destroy" onClick={onDeleted} />
         </div>
-        {editing ? <NewTaskForm clazz="edit" editTaskDesc={editTaskDesc} description={description} id={id} /> : null}
+        {isEditing ? <NewTaskForm clazz="edit" editTaskDesc={editTaskDesc} description={description} id={id} /> : null}
       </li>
     ),
-    [completed, editing, description, sec, min]
+    [isCompleted, isEditing, description, sec, min]
   )
 }
 
 Task.defaultProps = {
   onDeleted: () => {},
   onToogleCompleted: () => {},
-  completed: false,
+  isCompleted: false,
   onToogleEditing: () => {},
   editTaskDesc: () => {},
-  editing: false,
+  isEditing: false,
   id: 0,
   description: '',
   onPlay: () => {},
@@ -81,10 +78,10 @@ Task.defaultProps = {
 Task.propTypes = {
   onDeleted: PropTypes.func,
   onToogleCompleted: PropTypes.func,
-  completed: PropTypes.bool,
+  isCompleted: PropTypes.bool,
   onToogleEditing: PropTypes.func,
   editTaskDesc: PropTypes.func,
-  editing: PropTypes.bool,
+  isEditing: PropTypes.bool,
   id: PropTypes.number,
   description: PropTypes.string,
   onPlay: PropTypes.func,
